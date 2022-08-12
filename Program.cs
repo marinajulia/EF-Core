@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Curso.Data;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,8 @@ namespace DominandoEFCore
             // EnsureCreatedAndDeleted();
             // GapEnsureCreated();
             // HealthCheckBancoDeDados();
-            SqlInjection();
+            // SqlInjection();
+            MigracoesPendentes();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -79,6 +81,15 @@ namespace DominandoEFCore
 
             foreach(var Departamento in db.Departamentos.AsNoTracking()){
                 System.Console.WriteLine($"Id: {Departamento.Id}, Descrição: {Departamento.Descricao}");
+            }
+        }
+        static void MigracoesPendentes(){
+            using var db = new ApplicationContext();
+            var migracoesPendentes = db.Database.GetPendingMigrations();
+            Console.WriteLine($"Total: {migracoesPendentes.Count()}");
+
+            foreach(var migracao in migracoesPendentes){
+                Console.WriteLine($"Migração:{migracao}");
             }
         }
     }
