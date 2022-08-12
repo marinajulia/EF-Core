@@ -1,4 +1,6 @@
 ﻿using System;
+using Curso.Data;
+using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -11,11 +13,12 @@ namespace DominandoEFCore
         {
             // EnsureCreatedAndDeleted();
             // GapEnsureCreated();
-            HealthCheckBancoDeDados();
+            // HealthCheckBancoDeDados();
+            SqlInjection();
         }
 
         static void HealthCheckBancoDeDados(){
-            using var db = new Curso.Data.ApplicationContext();
+            using var db = new ApplicationContext();
             var canConnect = db.Database.CanConnect(); //Serve para validar se consegue conectar a base de dados
             if(canConnect){
                 var connection = db.Database.GetDbConnection();
@@ -27,13 +30,13 @@ namespace DominandoEFCore
             }
         }
         static void EnsureCreatedAndDeleted(){
-            using var db = new Curso.Data.ApplicationContext();
+            using var db = new ApplicationContext();
             // db.Database.EnsureCreated();
             db.Database.EnsureDeleted();
         }
         static void GapEnsureCreated(){
-            using var db1 = new Curso.Data.ApplicationContext(); 
-            using var db2 = new Curso.Data.ApplicationContextCidade(); 
+            using var db1 = new ApplicationContext(); 
+            using var db2 = new ApplicationContextCidade(); 
 
             db1.Database.EnsureCreated();
             db2.Database.EnsureCreated();
@@ -42,7 +45,7 @@ namespace DominandoEFCore
             databaseCreator.CreateTables();
         }
         static void ExecuteSQL(){
-            using var db = new Curso.Data.ApplicationContext();
+            using var db = new ApplicationContext();
 
             //primeira opção:
             using(var cmd = db.Database.GetDbConnection().CreateCommand()){
@@ -56,6 +59,27 @@ namespace DominandoEFCore
 
             //Terceira opção:
             db.Database.ExecuteSqlInterpolated($"update departamentos set descricao={descricao}, where id=1");
+        }
+        static void SqlInjection(){
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Departamentos.AddRange(
+                new Departamento{
+                    Descricao = "Departamento 01"
+                },
+                new Departamento{
+                    Descricao = "Departamento 02"
+                }
+            );
+            db.SaveChanges();
+            var descricao = "Teste ' or 1='1";
+            db.Database.ExecuteSqlRaw($"update departamentos set descricao='AtaqueSQLInjection' where descricao='{descricao}'");
+
+            foreach(var Departamento in db.Departamentos.AsNoTracking()){
+                System.Console.WriteLine($"Id: {Departamento.Id}, Descrição: {Departamento.Descricao}");
+            }
         }
     }
 }
