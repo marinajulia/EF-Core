@@ -41,5 +41,21 @@ namespace DominandoEFCore
             var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
             databaseCreator.CreateTables();
         }
+        static void ExecuteSQL(){
+            using var db = new Curso.Data.ApplicationContext();
+
+            //primeira opção:
+            using(var cmd = db.Database.GetDbConnection().CreateCommand()){
+                cmd.CommandText = "SELECT 1";
+                cmd.ExecuteNonQuery();
+            }
+
+            //Segunda opção:
+            var descricao = "TESTE";
+            db.Database.ExecuteSqlRaw("update departamentos set descricao={0}, where id=1", descricao);
+
+            //Terceira opção:
+            db.Database.ExecuteSqlInterpolated($"update departamentos set descricao={descricao}, where id=1");
+        }
     }
 }
