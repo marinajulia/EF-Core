@@ -16,7 +16,11 @@ namespace DominandoEFCore
             // GapEnsureCreated();
             // HealthCheckBancoDeDados();
             // SqlInjection();
-            MigracoesPendentes();
+            // MigracoesPendentes();
+            // AplicarMigracaoEmTempoDeExecucao();
+            // TodasMigracoes();
+            // MigracoesJaAplicadas();
+            ScriptGeralDoBancoDeDados();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -91,6 +95,36 @@ namespace DominandoEFCore
             foreach(var migracao in migracoesPendentes){
                 Console.WriteLine($"Migração:{migracao}");
             }
+        }
+        static void AplicarMigracaoEmTempoDeExecucao(){
+            using var db = new ApplicationContext();
+            db.Database.Migrate();
+        }
+        static void TodasMigracoes(){
+            using var db = new ApplicationContext();
+            var migracoes = db.Database.GetMigrations();
+
+            Console.WriteLine($"Total: {migracoes.Count()}");
+
+            foreach(var migracao in migracoes){
+                Console.WriteLine($"Migração: {migracao}");
+            }
+        }
+        static void MigracoesJaAplicadas(){
+            using var db = new ApplicationContext();
+            var migracoes = db.Database.GetAppliedMigrations();
+
+            Console.WriteLine($"Total: {migracoes.Count()}");
+
+            foreach(var migracao in migracoes){
+                Console.WriteLine($"Migração: {migracao}");
+            }
+        }
+        static void ScriptGeralDoBancoDeDados(){
+            using var db = new ApplicationContext();
+            var script = db.Database.GenerateCreateScript();
+
+            Console.WriteLine($"script: {script}");
         }
     }
 }
