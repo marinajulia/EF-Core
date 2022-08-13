@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Curso.Data;
 using Curso.Domain;
@@ -20,7 +21,8 @@ namespace DominandoEFCore
             // AplicarMigracaoEmTempoDeExecucao();
             // TodasMigracoes();
             // MigracoesJaAplicadas();
-            ScriptGeralDoBancoDeDados();
+            // ScriptGeralDoBancoDeDados();
+            CarregamentoAdiantado();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -126,5 +128,58 @@ namespace DominandoEFCore
 
             Console.WriteLine($"script: {script}");
         }
+        static void SetupTiposCarregamentos(ApplicationContext db){
+            if(!db.Departamentos.Any()){
+                db.Departamentos.AddRange(
+                    new Departamento{
+                        Descricao = "Departamento 01",
+                        Funcionarios = new List<Funcionario>{
+                            new Funcionario{
+                                Nome = "Rafael Almeida",
+                                CPF = "865435765544",
+                                RG = "674764756"
+                            }
+                        }
+                    },
+                    new Departamento{
+                        Descricao = "Departamento 02",
+                        Funcionarios = new List<Funcionario>{
+                            new Funcionario{
+                                Nome = "Rafael Almeida2",
+                                CPF = "865435765544",
+                                RG = "674764756"
+                            },
+                            new Funcionario{
+                                Nome = "Rafael Almeida3",
+                                CPF = "865435765544",
+                                RG = "674764756"
+                            }
+                        }
+                    }
+                );
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
+        }
+        static void CarregamentoAdiantado(){
+            using var db = new ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db.Departamentos.Include(p=> p.Funcionarios);
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine("--------------------------------");
+                Console.WriteLine($"Departamneto: {departamento.Descricao}");
+
+                if(departamento.Funcionarios?.Any() ?? false){
+                    foreach(var funcionario in departamento.Funcionarios){
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }else{
+                    Console.WriteLine($"\tNenhum funcionario encontrado");
+                }
+            }
+        }
+    
     }
 }
