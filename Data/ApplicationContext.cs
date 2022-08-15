@@ -15,7 +15,7 @@ namespace Curso.Data
             optionsBuilder
             .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;")
             .EnableSensitiveDataLogging()
-            .UseLazyLoadingProxies()
+            // .UseLazyLoadingProxies()
             .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }

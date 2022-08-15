@@ -208,7 +208,7 @@ namespace DominandoEFCore
         static void CarregamentoLento(){
             using var db = new ApplicationContext();
             SetupTiposCarregamentos(db);
-
+            // db.ChangeTracker.LazyLoadingEnabled = false;
             var departamentos = db.Departamentos.ToList();
 
             foreach(var departamento in departamentos){
