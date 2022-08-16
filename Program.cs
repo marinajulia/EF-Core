@@ -25,6 +25,7 @@ namespace DominandoEFCore
             // CarregamentoAdiantado();
             // CarregamentoExplicito();
             // CarregamentoLento();
+            FiltroGlobal();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -225,5 +226,50 @@ namespace DominandoEFCore
                 }
             }
         }
+        static void FiltroGlobal(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.Where(p=> p.Id > 0).ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
+        }
+        static void Setup(ApplicationContext db){
+
+            if(db.Database.EnsureCreated())
+                db.Departamentos.AddRange(
+                    new Departamento{
+                        Descricao = "Departamento 01",
+                        Funcionarios = new List<Funcionario>{
+                            new Funcionario{
+                                Nome = "Rafael Almeida",
+                                CPF = "865435765544",
+                                RG = "674764756"
+                            }
+                        },
+                    Excluido=true
+                    },
+                    new Departamento{
+                        Descricao = "Departamento 02",
+                        Funcionarios = new List<Funcionario>{
+                            new Funcionario{
+                                Nome = "Rafael Almeida2",
+                                CPF = "865435765544",
+                                RG = "674764756"
+                            },
+                            new Funcionario{
+                                Nome = "Rafael Almeida3",
+                                CPF = "865435765544",
+                                RG = "674764756"
+                            }
+                        },
+                    }
+                );
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
+        }
     }
-}
+
