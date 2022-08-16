@@ -24,7 +24,7 @@ namespace DominandoEFCore
             // ScriptGeralDoBancoDeDados();
             // CarregamentoAdiantado();
             // CarregamentoExplicito();
-            CarregamentoLento();
+            // CarregamentoLento();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -45,14 +45,14 @@ namespace DominandoEFCore
             db.Database.EnsureDeleted();
         }
         static void GapEnsureCreated(){
-            using var db1 = new ApplicationContext(); 
-            using var db2 = new ApplicationContextCidade(); 
+            // using var db1 = new ApplicationContext(); 
+            // using var db2 = new ApplicationContextCidade(); 
 
-            db1.Database.EnsureCreated();
-            db2.Database.EnsureCreated();
+            // db1.Database.EnsureCreated();
+            // db2.Database.EnsureCreated();
 
-            var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
-            databaseCreator.CreateTables();
+            // var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
+            // databaseCreator.CreateTables();
         }
         static void ExecuteSQL(){
             using var db = new ApplicationContext();
