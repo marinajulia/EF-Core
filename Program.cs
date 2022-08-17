@@ -27,7 +27,8 @@ namespace DominandoEFCore
             // CarregamentoLento();
             // FiltroGlobal();
             // IgnoreFiltroGlobal();
-            ConsultaProjetada();
+            // ConsultaProjetada();
+            ConsultaParametrizada();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -262,6 +263,18 @@ namespace DominandoEFCore
                 foreach(var funcionario in departamento.Funcionarios){
                 Console.WriteLine($"Nome: {funcionario}");
             }
+            }
+        }
+        static void ConsultaParametrizada(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+            .FromSqlRaw("SELECT * FROM  Departamentos")
+            .ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
             }
         }
         static void Setup(ApplicationContext db){
