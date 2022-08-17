@@ -19,7 +19,7 @@ namespace Curso.Data
             .LogTo(Console.WriteLine, LogLevel.Information);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder){
-            modelBuilder.Entity<Departamento>().HasQueryFilter(p=>!p.Excluido);
+            // modelBuilder.Entity<Departamento>().HasQueryFilter(p=>!p.Excluido);
         }
     }
 }

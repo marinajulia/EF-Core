@@ -25,7 +25,9 @@ namespace DominandoEFCore
             // CarregamentoAdiantado();
             // CarregamentoExplicito();
             // CarregamentoLento();
-            FiltroGlobal();
+            // FiltroGlobal();
+            // IgnoreFiltroGlobal();
+            ConsultaProjetada();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -234,6 +236,32 @@ namespace DominandoEFCore
 
             foreach(var departamento in departamentos){
                 Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
+        }
+        static void IgnoreFiltroGlobal(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.IgnoreQueryFilters().Where(p=> p.Id > 0).ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
+        }
+        static void ConsultaProjetada(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+            .Where(p=> p.Id > 0)
+            .Select(p=> new {p.Descricao, Funcionarios = p.Funcionarios.Select(f =>f.Nome)})
+            .ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+                foreach(var funcionario in departamento.Funcionarios){
+                Console.WriteLine($"Nome: {funcionario}");
+            }
             }
         }
         static void Setup(ApplicationContext db){
