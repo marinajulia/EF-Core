@@ -30,7 +30,10 @@ namespace DominandoEFCore
             // FiltroGlobal();
             // IgnoreFiltroGlobal();
             // ConsultaProjetada();
-            ConsultaParametrizada();
+            // ConsultaParametrizada();
+            // ConsultaInterpolada();
+            // ConsultaComTag();
+            EntendendoConsulta1NN1();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -283,6 +286,58 @@ namespace DominandoEFCore
 
             foreach(var departamento in departamentos){
                 Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+        static void ConsultaInterpolada(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var id = 1;
+            
+            var departamentos = db.Departamentos
+            .FromSqlInterpolated($"SELECT * FROM  Departamentos WHERE Id>{id}")
+            .ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        static void ConsultaComTag(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+            .TagWith(@"Estou enviando um comentario para o servidor
+                segundo comentario
+                terceiro comentario")
+            .ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+        static void EntendendoConsulta1NN1(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            // var departamentos = db.Departamentos
+            // .Include(p=>p.Funcionarios)
+            // .ToList();
+
+            // foreach(var departamento in departamentos){
+            //     Console.WriteLine($"Descrição: {departamento.Descricao}");
+
+            //     foreach(var funcionario in departamento.Funcionarios){
+            //     Console.WriteLine($"Nome: {funcionario.Nome}");
+            // }
+            // }
+            var funcionarios = db.Funcionarios
+            .Include(p=>p.Departamento)
+            .ToList();
+
+                foreach(var funcionario in funcionarios){
+                Console.WriteLine($"Nome: {funcionario.Nome} / descrição dep:{funcionario.Departamento.Descricao}");
             }
         }
         static void Setup(ApplicationContext db){
