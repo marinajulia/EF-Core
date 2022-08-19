@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Curso.Data;
 using Curso.Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -269,8 +271,14 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
             Setup(db);
 
+            var id = new SqlParameter{
+                Value = 1,
+                SqlDbType = SqlDbType.Int
+            };
+            
             var departamentos = db.Departamentos
-            .FromSqlRaw("SELECT * FROM  Departamentos")
+            .FromSqlRaw("SELECT * FROM  Departamentos WHERE Id>{0}", 1)
+            .Where(p=>!p.Excluido)
             .ToList();
 
             foreach(var departamento in departamentos){
