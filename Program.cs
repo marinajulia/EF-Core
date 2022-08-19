@@ -33,7 +33,8 @@ namespace DominandoEFCore
             // ConsultaParametrizada();
             // ConsultaInterpolada();
             // ConsultaComTag();
-            EntendendoConsulta1NN1();
+            // EntendendoConsulta1NN1();
+            DivisaodeConsulta();
         }
 
         static void HealthCheckBancoDeDados(){
@@ -338,6 +339,23 @@ namespace DominandoEFCore
 
                 foreach(var funcionario in funcionarios){
                 Console.WriteLine($"Nome: {funcionario.Nome} / descrição dep:{funcionario.Departamento.Descricao}");
+            }
+        }
+        static void DivisaodeConsulta(){
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+            .Include(p=>p.Funcionarios)
+            // .AsSplitQuery()
+            .AsSingleQuery() //para não repreduzir a single query global
+            .ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+                foreach(var funcionario in departamento.Funcionarios){
+                Console.WriteLine($"Nome: {funcionario.Nome}");
+            }
             }
         }
         static void Setup(ApplicationContext db){
