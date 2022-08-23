@@ -19,14 +19,16 @@ namespace Curso.Data
             const string strConnection = @"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;";
             optionsBuilder
                 .UseSqlServer(strConnection)
-                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .LogTo(Console.WriteLine, LogLevel.Information)
                 // .LogTo(Console.WriteLine, 
                 //     new[] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
                 //     LogLevel.Information,
                 //     DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
                 // );
                 // .LogTo(_writer.WriteLine, LogLevel.Information);
-                .EnableDetailedErrors();
+                // .EnableDetailedErrors()
+                .EnableSensitiveDataLogging()
+                ;
         }
 
         public override void Dispose(){
