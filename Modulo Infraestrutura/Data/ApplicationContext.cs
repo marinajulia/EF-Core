@@ -1,6 +1,7 @@
 using System;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Curso.Data
@@ -12,14 +13,16 @@ namespace Curso.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            const string strConnection = @"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;";
             optionsBuilder
-            .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;")
-            .EnableSensitiveDataLogging()
-            // .UseLazyLoadingProxies()
-            .LogTo(Console.WriteLine, LogLevel.Information);
+                .UseSqlServer(strConnection)
+                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .LogTo(Console.WriteLine, 
+                    new[] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
+                    LogLevel.Information,
+                    DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
+                );
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder){
-            // modelBuilder.Entity<Departamento>().HasQueryFilter(p=>!p.Excluido);
-        }
+       
     }
 }
