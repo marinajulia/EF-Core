@@ -34,9 +34,57 @@ namespace DominandoEFCore
             // ConsultaInterpolada();
             // ConsultaComTag();
             // EntendendoConsulta1NN1();
-            DivisaodeConsulta();
+            // DivisaodeConsulta();
+            // CriarStoredProcedure();
+            // InserirDadosViaProcedure();
+            // CriarStoredProcedureDeConsulta();
+            ConsultaViaProcedure();
         }
 
+        static void ConsultaViaProcedure(){
+            using var db = new ApplicationContext();
+            var dep = new SqlParameter("@dep", "Departamento");
+
+            var departamentos = db.Departamentos.FromSqlRaw("EXECUTE GetDepartamentos @dep", dep)
+            .ToList();
+
+            foreach(var departamento in departamentos){
+                Console.WriteLine(departamento.Descricao);
+            }
+        }
+        static void CriarStoredProcedureDeConsulta(){
+            var criarDepartamento = @"
+            CREATE OR ALTER PROCEDURE GetDepartamentos
+                @Descricao VARCHAR(50)
+            AS
+            BEGIN
+                SELECT * FROM Departamentos Where Descricao like @Descricao + '%'
+            END
+            ";
+
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw(criarDepartamento);
+        }
+        static void InserirDadosViaProcedure(){
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw("execute CriarDepartamento @p0, @p1", "Departamento Via Procedure", true);
+        }
+        static void CriarStoredProcedure(){
+            var criarDepartamento = @"
+            CREATE OR ALTER PROCEDURE CriarDepartamento
+                @Descricao VARCHAR(50),
+                @Ativo bit
+            AS
+            BEGIN
+                INSERT INTO
+                    Departamentos(Descricao, Ativo, Excluido)
+                    VALUES(@Descricao, @Ativo, 0)
+            END
+            ";
+
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw(criarDepartamento);
+        }
         static void HealthCheckBancoDeDados(){
             using var db = new ApplicationContext();
             var canConnect = db.Database.CanConnect(); //Serve para validar se consegue conectar a base de dados

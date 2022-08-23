@@ -13,7 +13,7 @@ namespace Curso.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-            .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;", p=>p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+            .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;")
             .EnableSensitiveDataLogging()
             // .UseLazyLoadingProxies()
             .LogTo(Console.WriteLine, LogLevel.Information);
