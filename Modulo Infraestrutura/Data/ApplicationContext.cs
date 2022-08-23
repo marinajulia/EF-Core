@@ -25,7 +25,8 @@ namespace Curso.Data
                 //     LogLevel.Information,
                 //     DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
                 // );
-                .LogTo(_writer.WriteLine, LogLevel.Information);
+                // .LogTo(_writer.WriteLine, LogLevel.Information);
+                .EnableDetailedErrors();
         }
 
         public override void Dispose(){
