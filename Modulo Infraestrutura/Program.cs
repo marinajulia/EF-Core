@@ -17,7 +17,13 @@ namespace DominandoEFCore
         {
             // ConsultarDepartamentos();
             // DadosSensiveis();
-            HabilitandoBatchSize();
+            // HabilitandoBatchSize();
+            TempoComandoGeral();
+        }
+
+        static void TempoComandoGeral(){
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07';SELECT 1");
         }
         static void HabilitandoBatchSize(){
             using var db = new ApplicationContext();
