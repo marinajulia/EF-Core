@@ -33,6 +33,7 @@ namespace DominandoEFCore
                     }
                 );
             }
+            db.SaveChanges();
         }
         static void DadosSensiveis(){
             using var db = new ApplicationContext();

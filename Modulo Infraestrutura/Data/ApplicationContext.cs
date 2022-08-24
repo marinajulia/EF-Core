@@ -18,7 +18,7 @@ namespace Curso.Data
         {
             const string strConnection = @"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;";
             optionsBuilder
-                .UseSqlServer(strConnection)
+                .UseSqlServer(strConnection, o => o.MaxBatchSize(100))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 // .LogTo(Console.WriteLine, 
                 //     new[] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
