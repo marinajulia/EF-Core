@@ -18,27 +18,15 @@ namespace Curso.Data
         {
             const string strConnection = @"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Curso;Integrated Security=True;pooling=true;";
             optionsBuilder
-                .UseSqlServer(strConnection, 
-                    o => o
-                        .MaxBatchSize(100)
-                        .CommandTimeout(5)
-                        .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null) //sem parametros ele tenta 6x em 30s
-                        )
+                .UseSqlServer(strConnection)
                 .LogTo(Console.WriteLine, LogLevel.Information)
-                // .LogTo(Console.WriteLine, 
-                //     new[] {CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted},
-                //     LogLevel.Information,
-                //     DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine
-                // );
-                // .LogTo(_writer.WriteLine, LogLevel.Information);
-                // .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
                 ;
         }
 
-        public override void Dispose(){
-            base.Dispose();
-            _writer.Dispose();
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");//caseinsensitive, ignora acentuação
+            modelBuilder.Entity<Departamento>().Property(p=>p.Descricao).UseCollation("SQL_Latin1_General_CP1_CS_AS"); //case sensitive e valida acentuação
         }
        
     }
