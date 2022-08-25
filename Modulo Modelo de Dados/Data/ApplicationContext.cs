@@ -25,20 +25,27 @@ namespace Curso.Data
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
-            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");//caseinsensitive, ignora acentuação
+            // modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");//caseinsensitive, ignora acentuação
 
-            modelBuilder.Entity<Departamento>().Property(p=>p.Descricao)
-            .UseCollation("SQL_Latin1_General_CP1_CS_AS"); //case sensitive e valida acentuação
+            // modelBuilder.Entity<Departamento>().Property(p=>p.Descricao)
+            // .UseCollation("SQL_Latin1_General_CP1_CS_AS"); //case sensitive e valida acentuação
 
-            modelBuilder.HasSequence<int>("MinhaSequencia", "sequencias")
-            .StartsAt(1)
-            .IncrementsBy(2)
-            .HasMin(1)
-            .HasMax(10)
-            .IsCyclic();
+            // modelBuilder.HasSequence<int>("MinhaSequencia", "sequencias")
+            // .StartsAt(1)
+            // .IncrementsBy(2)
+            // .HasMin(1)
+            // .HasMax(10)
+            // .IsCyclic();
 
-            modelBuilder.Entity<Departamento>().Property(p=>p.Id)
-            .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); 
+            // modelBuilder.Entity<Departamento>().Property(p=>p.Id)
+            // .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); 
+
+            modelBuilder.Entity<Departamento>()
+            .HasIndex(p=> new {p.Descricao, p.Ativo})
+            .HasDatabaseName("idx_meu_indice_composto")
+            .HasFilter("Descricao IS NOT NULL")
+            .HasFillFactor(80)
+            .IsUnique();
         }
        
     }
