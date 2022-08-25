@@ -18,11 +18,26 @@ namespace DominandoEFCore
             // ConsultarDepartamentos();
             // DadosSensiveis();
             // HabilitandoBatchSize();
-            TempoComandoGeral();
+            // TempoComandoGeral();
+            ExecutarEstrategiaResiliencia();
         }
 
+        static void ExecutarEstrategiaResiliencia(){
+            using var db = new ApplicationContext();
+            using var transaction = db.Database.BeginTransaction();
+
+            var strategy =db.Database.CreateExecutionStrategy();
+            strategy.Execute(()=>{
+                db.Departamentos.Add(new Departamento {Descricao = "Departamento transação"});
+                db.SaveChanges();
+
+                transaction.Commit();
+            });
+            
+        }
         static void TempoComandoGeral(){
             using var db = new ApplicationContext();
+            db.Database.SetCommandTimeout(10);
             db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07';SELECT 1");
         }
         static void HabilitandoBatchSize(){
