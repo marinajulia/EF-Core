@@ -48,10 +48,13 @@ namespace Curso.Data
             // .HasFillFactor(80)
             // .IsUnique();
 
-            modelBuilder.Entity<Estado>().HasData(new[]{
-                new Estado{ Id = 1, Nome = "São Paulo"},
-                new Estado{ Id = 2, Nome = "Sergipe"}
-            });
+            // modelBuilder.Entity<Estado>().HasData(new[]{
+            //     new Estado{ Id = 1, Nome = "São Paulo"},
+            //     new Estado{ Id = 2, Nome = "Sergipe"}
+            // });
+
+            modelBuilder.HasDefaultSchema("cadastros");
+            modelBuilder.Entity<Estado>().ToTable("Estados", "Segundo esquema");
         }
        
     }
