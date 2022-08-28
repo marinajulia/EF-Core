@@ -15,13 +15,22 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            Collactions();
+            // Collactions();
+            PropragarDados();
         }
 
         static void Collactions(){
             using var db = new ApplicationContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+        }
+        static void PropragarDados(){
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var script = db.Database.GenerateCreateScript();
+            System.Console.WriteLine(script);
         }
     }
 }

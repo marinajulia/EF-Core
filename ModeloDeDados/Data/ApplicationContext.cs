@@ -13,6 +13,7 @@ namespace Curso.Data
         private readonly StreamWriter _writer = new StreamWriter("meu_log_do_ef_core.txt", append: true);
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,12 +41,17 @@ namespace Curso.Data
             // modelBuilder.Entity<Departamento>().Property(p=>p.Id)
             // .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); 
 
-            modelBuilder.Entity<Departamento>()
-            .HasIndex(p=> new {p.Descricao, p.Ativo})
-            .HasDatabaseName("idx_meu_indice_composto")
-            .HasFilter("Descricao IS NOT NULL")
-            .HasFillFactor(80)
-            .IsUnique();
+            // modelBuilder.Entity<Departamento>()
+            // .HasIndex(p=> new {p.Descricao, p.Ativo})
+            // .HasDatabaseName("idx_meu_indice_composto")
+            // .HasFilter("Descricao IS NOT NULL")
+            // .HasFillFactor(80)
+            // .IsUnique();
+
+            modelBuilder.Entity<Estado>().HasData(new[]{
+                new Estado{ Id = 1, Nome = "São Paulo"},
+                new Estado{ Id = 2, Nome = "Sergipe"}
+            });
         }
        
     }
