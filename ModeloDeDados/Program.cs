@@ -18,9 +18,26 @@ namespace DominandoEFCore
             // Collactions();
             // PropragarDados();
             // Esquema();
-            ConversoresDeValor();
+            // ConversoresDeValor();
+            ConversorCustomizado();
         }
 
+        static void ConversorCustomizado(){
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Conversores.Add(
+                new Conversor{
+                    Status = Status.Devolvido,
+                }
+            );
+
+            db.SaveChanges();
+
+            var conversorEmAnalise = db.Conversores.AsNoTracking().FirstOrDefault(p=> p.Status == Status.Analise);
+            var conversorDevolvido = db.Conversores.AsNoTracking().FirstOrDefault(p=> p.Status == Status.Devolvido);
+        }
         static void Collactions(){
             using var db = new ApplicationContext();
             db.Database.EnsureDeleted();

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Curso.Conversores;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -59,11 +60,16 @@ namespace Curso.Data
             // modelBuilder.Entity<Estado>().ToTable("Estados", "Segundo esquema");
 
             var conversao = new ValueConverter<Versao, string>(p=> p.ToString(), p=> (Versao)Enum.Parse(typeof(Versao), p));
+            var conversao1 = new EnumToStringConverter<Versao>();
 
             modelBuilder.Entity<Conversor>()
             .Property (p=> p.Versao)
-            .HasConversion(conversao);
+            .HasConversion(conversao1);
             // .HasConversion<string>();
+
+            modelBuilder.Entity<Conversor>()
+            .Property (p=> p.Status)
+            .HasConversion(new ConversorCustomizado());
         }
        
     }
