@@ -70,6 +70,8 @@ namespace Curso.Data
             modelBuilder.Entity<Conversor>()
             .Property (p=> p.Status)
             .HasConversion(new ConversorCustomizado());
+
+            modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
         }
        
     }

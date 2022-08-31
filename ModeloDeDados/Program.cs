@@ -19,9 +19,30 @@ namespace DominandoEFCore
             // PropragarDados();
             // Esquema();
             // ConversoresDeValor();
-            ConversorCustomizado();
+            // ConversorCustomizado();
+            // PropriedadeDeSombra();
+            TrabalhandoComPropriedadeDeSombra();
         }
+        static void TrabalhandoComPropriedadeDeSombra(){
+            using var db = new ApplicationContext();
+            // db.Database.EnsureDeleted();
+            // db.Database.EnsureCreated();
 
+            // var departamento = new Departamento{
+            //     Descricao = "Departamento Propriedade De Sombra"
+            // };
+
+            // db.Departamentos.Add(departamento);
+            // db.Entry(departamento).Property("UltimaAtualizacao").CurrentValue = DateTime.Now;
+            // db.SaveChanges();
+
+            var departamentos = db.Departamentos.Where(p=>EF.Property<DateTime>(p, "UltimaAtualizacao") < DateTime.Now).ToArray();
+        }
+        static void PropriedadeDeSombra(){
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+        }
         static void ConversorCustomizado(){
             using var db = new ApplicationContext();
             db.Database.EnsureDeleted();
