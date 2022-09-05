@@ -21,7 +21,28 @@ namespace DominandoEFCore
             // ConversoresDeValor();
             // ConversorCustomizado();
             // PropriedadeDeSombra();
-            TrabalhandoComPropriedadeDeSombra();
+            // TrabalhandoComPropriedadeDeSombra();
+            Relacionamento1Para1();
+        }
+
+        static void Relacionamento1Para1(){
+            using var db = new ApplicationContext();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var estado = new Estado{
+                Nome = "Sergipe",
+                Governador = new Governador{Nome = "Rafael Almeida"}
+            };
+            db.Estados.Add(estado);
+            db.SaveChanges();
+
+            var estados= db.Estados.AsNoTracking().ToList();
+
+            estados.ForEach(est => {
+                System.Console.WriteLine($"Estado: {est.Nome}, Governador: {est.Governador.Nome}");
+            });
         }
         static void TrabalhandoComPropriedadeDeSombra(){
             using var db = new ApplicationContext();

@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Reflection;
+using Curso.Configurations;
 using Curso.Conversores;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,7 @@ namespace Curso.Data
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Conversor> Conversores { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -59,19 +62,28 @@ namespace Curso.Data
             // modelBuilder.HasDefaultSchema("cadastros");
             // modelBuilder.Entity<Estado>().ToTable("Estados", "Segundo esquema");
 
-            var conversao = new ValueConverter<Versao, string>(p=> p.ToString(), p=> (Versao)Enum.Parse(typeof(Versao), p));
-            var conversao1 = new EnumToStringConverter<Versao>();
+            // var conversao = new ValueConverter<Versao, string>(p=> p.ToString(), p=> (Versao)Enum.Parse(typeof(Versao), p));
+            // var conversao1 = new EnumToStringConverter<Versao>();
 
-            modelBuilder.Entity<Conversor>()
-            .Property (p=> p.Versao)
-            .HasConversion(conversao1);
-            // .HasConversion<string>();
+            // modelBuilder.Entity<Conversor>()
+            // .Property (p=> p.Versao)
+            // .HasConversion(conversao1);
+            // // .HasConversion<string>();
 
-            modelBuilder.Entity<Conversor>()
-            .Property (p=> p.Status)
-            .HasConversion(new ConversorCustomizado());
+            // modelBuilder.Entity<Conversor>()
+            // .Property (p=> p.Status)
+            // .HasConversion(new ConversorCustomizado());
 
-            modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
+            // modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
+
+            // modelBuilder.Entity<Cliente>(p=>
+            // {
+            //     p.OwnsMany(x=> x.Endereco);
+            // });
+
+            // modelBuilder.ApplyConfiguration(new ClientConfiguration());
+            // modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
         }
        
     }
