@@ -14,6 +14,12 @@ namespace Curso.Configurations
             .HasForeignKey<Governador>(p=>p.EstadoId);
 
             builder.Navigation(p=>p.Governador).AutoInclude();
+
+            builder
+            .HasMany(p=> p.Cidades)
+            .WithOne(p=>p.Estado);
+            // .IsRequired(false) esse faz com que eu possa inserir uma cidade sem ter um estado(FK)
+            // .OnDelete(DeleteBehavior.Restrict) para não deletar em cascata
         }
     }
 }

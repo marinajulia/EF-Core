@@ -25,6 +25,36 @@ namespace DominandoEFCore
             Relacionamento1Para1();
         }
 
+        static void Relacionamento1ParaMuitos(){
+            using (var db = new ApplicationContext()){
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var estado = new Estado{
+                    Nome = "Sergipe",
+                    Governador = new Governador{Nome = "Rafael Almeida"}
+                };
+                estado.Cidades.Add(new Cidade {Nome = "Teste"});
+
+                db.Estados.Add(estado);
+                db.SaveChanges();
+            }
+
+            using (var db = new ApplicationContext()){
+                var estados= db.Estados.AsNoTracking().ToList();
+                estados[0].Cidades.Add(new Cidade{Nome = "Aracaju"});
+
+                db.SaveChanges();
+
+                foreach(var est in db.Estados.Include(p=>p.Cidades).AsNoTracking()){
+                    System.Console.WriteLine($"Estado: {est.Nome}, Governador: {est.Governador.Nome}");
+                    foreach(var cidade in est.Cidades){
+                        System.Console.WriteLine($"Cidade: {cidade.Nome}");
+                    }
+                }
+            }
+        }
+
         static void Relacionamento1Para1(){
             using var db = new ApplicationContext();
 

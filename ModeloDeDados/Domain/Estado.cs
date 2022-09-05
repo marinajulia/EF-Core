@@ -10,6 +10,8 @@ namespace Curso.Domain
         public int Id { get; set; }
         public string Nome { get; set; }
         public Governador Governador { get; set; }
+
+        public ICollection<Cidade> Cidades{get;} = new List<Cidade>();
     }
 
     public class Governador{
@@ -19,5 +21,12 @@ namespace Curso.Domain
         public string Partido{ get; set; }
         public int EstadoId{ get; set; }
         public Estado Estado{ get; set; }
+    }
+    public class Cidade{
+        public int Id {get; set; }
+        public string Nome {get; set; }
+
+        public int EstadoId { get; set; }
+        public Estado Estado { get; set; }
     }
 }
