@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Curso.Configurations;
@@ -26,6 +27,7 @@ namespace Curso.Data
         public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Instrutor> Instrutores { get; set; }
         public DbSet<Aluno> Alunos { get; set; }
+        public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -90,6 +92,18 @@ namespace Curso.Data
             // modelBuilder.ApplyConfiguration(new ClientConfiguration());
             // modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("Configuracoes", b =>{
+
+                b.Property<int>("Id");
+
+                b.Property<string>("Chave")
+                    .HasColumnType("VARCHAR(40)")
+                    .IsRequired();
+                    
+                b.Property<string>("Valor")
+                    .HasColumnType("VARCHAR(255)")
+                    .IsRequired();
+            });
         }
        
     }
