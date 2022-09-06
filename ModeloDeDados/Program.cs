@@ -23,7 +23,25 @@ namespace DominandoEFCore
             // PropriedadeDeSombra();
             // TrabalhandoComPropriedadeDeSombra();
             // Relacionamento1Para1();
-            RelacionamentoMuitosParaMuitos();
+            // RelacionamentoMuitosParaMuitos();
+            CampoDeApoio();
+        }
+        static void CampoDeApoio()
+        {
+            using (var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var documento = new Documento();
+                documento.SetCPF("23322323");
+
+                db.Documentos.Add(documento);
+                db.SaveChanges();
+                foreach(var doc in db.Documentos.AsNoTracking()){
+                    System.Console.WriteLine($"CPF: {doc.GetCPF()}");
+                }
+            }
         }
         static void RelacionamentoMuitosParaMuitos()
         {

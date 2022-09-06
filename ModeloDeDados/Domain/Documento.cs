@@ -10,6 +10,6 @@ namespace Curso.Domain
             }
             _cpf= cpf;
         }
-        public string CPF => _cpf;
+        public string GetCPF() => _cpf;
     }
 }
