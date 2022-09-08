@@ -26,7 +26,15 @@ namespace DominandoEFCore
             // RelacionamentoMuitosParaMuitos();
             // CampoDeApoio();
             // ExemploTPH();
-            PacotesDepropriedade();
+            // PacotesDepropriedade();
+            Atributos();
+        }
+        static void Atributos(){
+           using (var db = new ApplicationContext())
+            {
+                var script = db.Database.GenerateCreateScript();
+                Console.WriteLine(script);
+            } 
         }
 
         static void PacotesDepropriedade()
