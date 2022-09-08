@@ -34,32 +34,38 @@ namespace DominandoEFCore
             {
                 var script = db.Database.GenerateCreateScript();
                 Console.WriteLine(script);
+                // db.Atributos.Add(new Atributo{
+                //     Descricao = "Exemplo",
+                //     Observacao = "Observacao"
+                // });
+
+                // db.SaveChanges();
             } 
         }
 
         static void PacotesDepropriedade()
         {
-            using (var db = new ApplicationContext())
-            {
-                db.Database.EnsureDeleted();
-                db.Database.EnsureCreated();
+            // using (var db = new ApplicationContext())
+            // {
+            //     db.Database.EnsureDeleted();
+            //     db.Database.EnsureCreated();
 
-                var configuracao = new Dictionary<string, object>{
-                    ["Chave"] = "SenhaBancoDeDados",
-                    ["Valor"] = Guid.NewGuid().ToString()
-                };
-                db.Configuracoes.Add(configuracao);
-                db.SaveChanges();
+            //     var configuracao = new Dictionary<string, object>{
+            //         ["Chave"] = "SenhaBancoDeDados",
+            //         ["Valor"] = Guid.NewGuid().ToString()
+            //     };
+            //     db.Configuracoes.Add(configuracao);
+            //     db.SaveChanges();
 
-                var configuracoes = db.Configuracoes
-                .AsNoTracking()
-                .Where(p=>p["Chave"] == "SenhaBancoDeDados")
-                .ToArray();
+            //     var configuracoes = db.Configuracoes
+            //     .AsNoTracking()
+            //     .Where(p=>p["Chave"] == "SenhaBancoDeDados")
+            //     .ToArray();
 
-                foreach(var dic in configuracoes){
-                    Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["Valor"]}");
-                }
-            }
+            //     foreach(var dic in configuracoes){
+            //         Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["Valor"]}");
+            //     }
+            // }
         }
         static void ExemploTPH()
         {

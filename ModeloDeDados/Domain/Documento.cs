@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Curso.Domain
 {
     public class Documento
@@ -10,6 +12,8 @@ namespace Curso.Domain
             }
             _cpf= cpf;
         }
+        [BackingField(nameof(_cpf))]
+        public string CPF => _cpf;
         public string GetCPF() => _cpf;
     }
 }

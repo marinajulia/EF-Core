@@ -30,6 +30,7 @@ namespace Curso.Data
         public DbSet<Atributo> Atributos { get; set; }
         public DbSet<Voo> Voos { get; set; }
         public DbSet<Aeroporto> Aeroportos { get; set; }
+        public DbSet<RelatorioFinanceiro> RelatoriosFinanceiro { get; set; }
         public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
