@@ -15,7 +15,15 @@ namespace DominandoEFCore
             // FuncaoLike();
             // FuncaoDataLength();
             // FuncaoProperty();
-            FuncaoCollate();
+            // FuncaoCollate();
+            TesteInterceptacao();
+        }
+
+        static void TesteInterceptacao(){
+            using(var db = new ApplicationContext()){
+                var consulta = db.Funcoes.FirstOrDefault();
+                System.Console.WriteLine($"Consulta: {consulta?.Descricao1}");
+            }
         }
         static void FuncaoCollate(){
             
