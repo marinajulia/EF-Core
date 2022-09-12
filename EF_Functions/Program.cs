@@ -14,9 +14,25 @@ namespace DominandoEFCore
             // FuncoesDeDatas();
             // FuncaoLike();
             // FuncaoDataLength();
-            FuncaoProperty();
+            // FuncaoProperty();
+            FuncaoCollate();
         }
+        static void FuncaoCollate(){
+            
+            ApagarCriarBancoDeDados();
 
+            using(var db = new ApplicationContext()){
+
+                var consulta1 = db.Funcoes
+                .FirstOrDefault(p=> EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "tela");
+
+                var consulta2 = db.Funcoes
+                .FirstOrDefault(p=> EF.Functions.Collate(p.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela");
+
+                System.Console.WriteLine($"Consulta1: {consulta1?.Descricao1}");
+                System.Console.WriteLine($"Consulta2: {consulta2?.Descricao1}");
+            }
+        }
         static void FuncaoProperty(){
 
             ApagarCriarBancoDeDados();
@@ -93,8 +109,8 @@ namespace DominandoEFCore
             new Funcao{
                 Data1 = DateTime.Now.AddDays(1),
                 Data2 = "XX21-04-08",
-                Descricao1 = "Tela 1",
-                Descricao2 = "Tela 2"
+                Descricao1 = "Tela",
+                Descricao2 = "Tela"
             });
             db.SaveChanges();
                
