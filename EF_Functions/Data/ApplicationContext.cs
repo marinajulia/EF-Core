@@ -5,6 +5,7 @@ using System.Reflection;
 using Curso.Configurations;
 using Curso.Conversores;
 using Curso.Domain;
+using Curso.Interceptadores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -23,7 +24,7 @@ namespace Curso.Data
                 .UseSqlServer(strConnection)
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
-                ;
+                .AddInterceptors(new InterceptadorDeComandos());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
