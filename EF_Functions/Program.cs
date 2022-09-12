@@ -11,9 +11,29 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FuncoesDeDatas();
+            // FuncoesDeDatas();
+            FuncaoLike();
         }
 
+        static void FuncaoLike(){
+            using(var db = new ApplicationContext()){
+                var script = db.Database.GenerateCreateScript();
+                System.Console.WriteLine(script);
+
+                var dados = db.Funcoes
+                    .AsNoTracking()
+                    // .Where(p=> EF.Functions.Like(p.Descricao1, "%Bo%"))
+                    .Where(p=> EF.Functions.Like(p.Descricao1, "B[ao]%"))
+                    .Select(p=> p.Descricao1)
+                    .ToArray();
+                
+                System.Console.WriteLine("Resultado: ");
+                foreach(var descricao in dados){
+                    System.Console.WriteLine(descricao);
+                }
+            }
+
+        }
         static void ApagarCriarBancoDeDados()
         {
             using var db = new ApplicationContext();
