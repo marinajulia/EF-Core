@@ -12,9 +12,27 @@ namespace DominandoEFCore
         static void Main(string[] args)
         {
             // FuncoesDeDatas();
-            FuncaoLike();
+            // FuncaoLike();
+            FuncaoDataLength();
         }
 
+        static void FuncaoDataLength(){
+            using(var db = new ApplicationContext()){
+
+                var resultado = db.Funcoes
+                    .AsNoTracking()
+                    .Select(p=> new{
+                        TotalBytesCampoData = EF.Functions.DataLength(p.Data1),
+                        TotalBytes1 = EF.Functions.DataLength(p.Descricao1),
+                        TotalBytes2 = EF.Functions.DataLength(p.Descricao2),
+                        Total1 = p.Descricao1.Length,
+                        Total2 = p.Descricao2.Length
+                    }).FirstOrDefault();
+
+                System.Console.WriteLine("Resultado:");
+                System.Console.WriteLine(resultado);
+            }
+        }
         static void FuncaoLike(){
             using(var db = new ApplicationContext()){
                 var script = db.Database.GenerateCreateScript();
