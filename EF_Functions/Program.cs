@@ -13,9 +13,29 @@ namespace DominandoEFCore
         {
             // FuncoesDeDatas();
             // FuncaoLike();
-            FuncaoDataLength();
+            // FuncaoDataLength();
+            FuncaoProperty();
         }
 
+        static void FuncaoProperty(){
+
+            ApagarCriarBancoDeDados();
+
+            using(var db = new ApplicationContext()){
+
+                var resultado = db.Funcoes
+                // .AsNoTracking()
+                .FirstOrDefault(p=> EF.Property<string>(p, "PropriedadeSombra") == "Teste");
+
+                var propriedadeSombra = db.Entry(resultado)
+                    .Property<string>("PropriedadeSombra")
+                    .CurrentValue;
+
+                System.Console.WriteLine("Resultado:");
+                System.Console.WriteLine(propriedadeSombra);
+            }
+
+        }
         static void FuncaoDataLength(){
             using(var db = new ApplicationContext()){
 
