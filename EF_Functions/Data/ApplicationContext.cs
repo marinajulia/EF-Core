@@ -16,6 +16,7 @@ namespace Curso.Data
     public class ApplicationContext : DbContext
     {
         public DbSet<Funcao> Funcoes { get; set; }
+        public DbSet<Livro> Livros { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

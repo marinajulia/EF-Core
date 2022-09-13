@@ -17,8 +17,40 @@ namespace DominandoEFCore
             // FuncaoProperty();
             // FuncaoCollate();
             TesteInterceptacao();
+            ComportamentoPadrao();
         }
 
+        static void ComportamentoPadrao(){
+
+            CadastrarLivros();
+            using(var db = new ApplicationContext()){
+                var livro = db.Livros.FirstOrDefault(p=>p.Id == 1);
+                livro.Autor = "Rafael Almeida";
+
+                db.Livros.Add(
+                    new Livro{
+                        Titulo = "Dominando o EFCore",
+                        Autor = "Rafael Almeida"
+                    }
+                );
+                db.SaveChanges();
+            }
+        }
+        static void CadastrarLivros(){
+            using(var db = new ApplicationContext()){
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                db.Livros.Add(
+                    new Livro{
+                        Titulo = "Introdução ao EFCore",
+                        Autor = "Rafael"
+                    }
+                );
+
+                db.SaveChanges();
+            }
+        }
         static void TesteInterceptacao(){
             using(var db = new ApplicationContext()){
                 var consulta = db.Funcoes.FirstOrDefault();
