@@ -18,9 +18,35 @@ namespace DominandoEFCore
             // FuncaoCollate();
             // TesteInterceptacao();
             // ComportamentoPadrao();
-            GerenciandoTransacaoManualmente();
+            // GerenciandoTransacaoManualmente();
+            ReverterTransacao();
         }
 
+        static void ReverterTransacao(){
+
+            CadastrarLivros();
+            using(var db = new ApplicationContext()){
+                var transaao = db.Database.BeginTransaction();
+
+                try{
+                    var livro = db.Livros.FirstOrDefault(p=>p.Id == 1);
+                    livro.Autor = "Rafael Almeida";
+                    db.SaveChanges();
+
+                    db.Livros.Add(
+                        new Livro{
+                            Titulo = "Dominando o EFCore",
+                            Autor = "Rafael Almeida".PadLeft(16, '*')
+                        }
+                    );
+                    db.SaveChanges();
+                    transaao.Commit();
+                }catch(Exception e){
+                    transaao.Rollback();
+                }
+                
+            }
+        }
         static void GerenciandoTransacaoManualmente(){
 
             CadastrarLivros();
