@@ -19,9 +19,46 @@ namespace DominandoEFCore
             // TesteInterceptacao();
             // ComportamentoPadrao();
             // GerenciandoTransacaoManualmente();
-            ReverterTransacao();
+            // ReverterTransacao();
+            SalvarPontoTransacao();
         }
+        static void SalvarPontoTransacao(){
+            using(var db = new ApplicationContext()){
+                var transacao = db.Database.BeginTransaction();
 
+                try{
+                    var livro = db.Livros.FirstOrDefault(p=>p.Id == 1);
+                    livro.Autor = "Rafael Almeida";
+                    db.SaveChanges();
+
+                    transacao.CreateSavepoint("desfazer_apenas_insercao");
+                    db.Livros.Add(
+                        new Livro{
+                            Titulo = "titulo teste",
+                            Autor = "autor teste"
+                        }
+                    );
+
+                    db.SaveChanges();
+
+                    db.Livros.Add(
+                        new Livro{
+                            Titulo = "titulo teste2",
+                            Autor = "autor teste".PadLeft(16, '*')
+                        }
+                    );
+
+                    db.SaveChanges();
+                    transacao.Commit();
+                }catch(DbUpdateException e){
+                    transacao.ReleaseSavepoint("desfazer_apenas_insercao");
+
+                    if(e.Entries.Count(p=>p.State == EntityState.Added) == e.Entries.Count){
+                        transacao.Commit();
+                    }
+                }
+            }
+        }
         static void ReverterTransacao(){
 
             CadastrarLivros();
