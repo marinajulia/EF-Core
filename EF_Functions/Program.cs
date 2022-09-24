@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Transactions;
 using Curso.Data;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
+using IsolationLevel = System.Transactions.IsolationLevel;
 
 namespace DominandoEFCore
 {
@@ -20,7 +22,53 @@ namespace DominandoEFCore
             // ComportamentoPadrao();
             // GerenciandoTransacaoManualmente();
             // ReverterTransacao();
-            SalvarPontoTransacao();
+            // SalvarPontoTransacao();
+            TransactionScope();
+        }
+        static void TransactionScope(){
+            CadastrarLivros();
+
+            var transactionsOptions = new TransactionOptions{
+                IsolationLevel = IsolationLevel.ReadCommitted
+            };
+
+            using(var scope= new TransactionScope(TransactionScopeOption.Required, transactionsOptions)){
+                ConsultarAtualizar();
+                CadastrarLivroInterprise();
+                CadastrarLivroDominandoEFCore();
+                scope.Complete();
+            }
+        }
+        static void ConsultarAtualizar(){
+            using(var db = new ApplicationContext()){
+                var livro = db.Livros.FirstOrDefault(p=>p.Id ==1);
+                livro.Autor = "rafael almeida";
+                db.SaveChanges(); 
+            }
+        }
+        static void CadastrarLivroInterprise(){
+            using(var db = new ApplicationContext()){
+                db.Livros.Add(
+                        new Livro{
+                            Titulo = "LivroInterprise",
+                            Autor = "autor teste"
+                        }
+                    );
+
+                    db.SaveChanges();
+            }
+        }
+        static void CadastrarLivroDominandoEFCore(){
+            using(var db = new ApplicationContext()){
+                db.Livros.Add(
+                        new Livro{
+                            Titulo = "DominandoEFCore",
+                            Autor = "autor teste"
+                        }
+                    );
+
+                    db.SaveChanges();
+            }
         }
         static void SalvarPontoTransacao(){
             using(var db = new ApplicationContext()){
