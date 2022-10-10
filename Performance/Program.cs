@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Curso.Data;
-using Curso.Domain;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Curso.Data;
 
 namespace DominandoEFCore
 {
@@ -15,9 +6,13 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-           
+
         }
 
-      
+        static void ConsultaRastreada()
+        {
+            using var db = new ApplicationContext();
+        }
     }
 
+}
