@@ -7,12 +7,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using src.Data;
+using src.Data.Interceptors;
+using src.Data.ModelFactory;
 using src.Domain;
 using src.Middlewares;
 using src.Provider;
@@ -37,11 +40,27 @@ namespace EFCore.Multitenant
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EFCore.Multitenant", Version = "v1" });
             });
-            services.AddDbContext<ApplicationContext>(p=> p
-                .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Tenant99;Integrated Security=True;pooling=true;")
-                .LogTo(Console.WriteLine)
-                .EnableSensitiveDataLogging()
-            );
+            services.AddScoped<StrategySchemalInterceptor>();
+
+            //Identificador na tabela:
+            // services.AddDbContext<ApplicationContext>(p=> p
+            //     .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Tenant99;Integrated Security=True;pooling=true;")
+            //     .LogTo(Console.WriteLine)
+            //     .EnableSensitiveDataLogging()
+            // );
+
+            //Schema:
+            services.AddDbContext<ApplicationContext>((provider, options) =>
+            {
+                options
+                    .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Tenant99;Integrated Security=True;pooling=true;")
+                    .LogTo(Console.WriteLine)
+                    .ReplaceService<IModelCacheKeyFactory, StrategySchemaModelCacheKey>()
+                    .EnableSensitiveDataLogging();
+
+                    // var interceptor = provider.GetRequiredService<StrategySchemalInterceptor>();
+                    // options.AddInterceptors(interceptor);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

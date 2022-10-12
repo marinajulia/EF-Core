@@ -9,13 +9,14 @@ using src.Data;
 namespace EFCore.Multitenant.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20221011144354_Tenant01")]
-    partial class Tenant01
+    [Migration("20221012021810_EstrategiaTenantSchema")]
+    partial class EstrategiaTenantSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("dbo")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);

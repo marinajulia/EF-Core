@@ -2,12 +2,16 @@
 
 namespace EFCore.Multitenant.Migrations
 {
-    public partial class Tenant01 : Migration
+    public partial class EstrategiaTenantSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
             migrationBuilder.CreateTable(
                 name: "People",
+                schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -22,6 +26,7 @@ namespace EFCore.Multitenant.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Products",
+                schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -35,6 +40,7 @@ namespace EFCore.Multitenant.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "dbo",
                 table: "People",
                 columns: new[] { "Id", "Name", "TenantId" },
                 values: new object[,]
@@ -45,6 +51,7 @@ namespace EFCore.Multitenant.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "dbo",
                 table: "Products",
                 columns: new[] { "Id", "Description", "TenantId" },
                 values: new object[,]
@@ -58,10 +65,12 @@ namespace EFCore.Multitenant.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "People");
+                name: "People",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Products",
+                schema: "dbo");
         }
     }
 }
