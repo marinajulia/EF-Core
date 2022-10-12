@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ using src.Data;
 using src.Data.Interceptors;
 using src.Data.ModelFactory;
 using src.Domain;
+using src.Extensions;
 using src.Middlewares;
 using src.Provider;
 
@@ -42,24 +44,41 @@ namespace EFCore.Multitenant
             });
             services.AddScoped<StrategySchemalInterceptor>();
 
-            //Identificador na tabela:
+            //Estratégia 1 - Identificador na tabela:
             // services.AddDbContext<ApplicationContext>(p=> p
             //     .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Tenant99;Integrated Security=True;pooling=true;")
             //     .LogTo(Console.WriteLine)
             //     .EnableSensitiveDataLogging()
             // );
 
-            //Schema:
-            services.AddDbContext<ApplicationContext>((provider, options) =>
-            {
-                options
-                    .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Tenant99;Integrated Security=True;pooling=true;")
-                    .LogTo(Console.WriteLine)
-                    .ReplaceService<IModelCacheKeyFactory, StrategySchemaModelCacheKey>()
-                    .EnableSensitiveDataLogging();
+            //Estratégia 2 - Schema:
+            // services.AddDbContext<ApplicationContext>((provider, options) =>
+            // {
+            //     options
+            //         .UseSqlServer(@"Data Source=DESKTOP-RTPBNVC\SQLEXPRESS;Initial Catalog=Tenant99;Integrated Security=True;pooling=true;")
+            //         .LogTo(Console.WriteLine)
+            //         .ReplaceService<IModelCacheKeyFactory, StrategySchemaModelCacheKey>()
+            //         .EnableSensitiveDataLogging();
 
-                    // var interceptor = provider.GetRequiredService<StrategySchemalInterceptor>();
-                    // options.AddInterceptors(interceptor);
+            //         // var interceptor = provider.GetRequiredService<StrategySchemalInterceptor>();
+            //         // options.AddInterceptors(interceptor);
+            // });
+
+            //Estratégia 3 -Banco de dados
+            services.AddHttpContextAccessor();
+            services.AddScoped<ApplicationContext>(provider =>
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                var tenantId = httpContext?.GetTenantId();
+
+                // var connectionString = Configuration.GetConnectionString(tenantId);
+                var connectionString = Configuration.GetConnectionString("custom").Replace("_DATABASE", tenantId);
+                optionsBuilder
+                     .UseSqlServer(connectionString)
+                    .LogTo(Console.WriteLine)
+                    .EnableSensitiveDataLogging();
+                return new ApplicationContext(optionsBuilder.Options);
             });
         }
 
@@ -81,7 +100,7 @@ namespace EFCore.Multitenant
 
             app.UseAuthorization();
 
-            app.UseMiddleware<TenantMiddleware>();
+            // app.UseMiddleware<TenantMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
