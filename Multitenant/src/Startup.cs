@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using src.Data;
 using src.Domain;
+using src.Middlewares;
+using src.Provider;
 
 namespace EFCore.Multitenant
 {
@@ -29,7 +31,7 @@ namespace EFCore.Multitenant
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddScoped<TenantData>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -51,8 +53,8 @@ namespace EFCore.Multitenant
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EFCore.Multitenant v1"));
             }
-            
-            DatabaseInitialize(app);
+
+            // DatabaseInitialize(app);
 
             app.UseHttpsRedirection();
 
@@ -60,28 +62,30 @@ namespace EFCore.Multitenant
 
             app.UseAuthorization();
 
+            app.UseMiddleware<TenantMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
         }
 
-        private void DatabaseInitialize(IApplicationBuilder app)
-        {
-            using var db = app.ApplicationServices
-            .CreateScope()
-            .ServiceProvider
-            .GetRequiredService<ApplicationContext>();
+        // private void DatabaseInitialize(IApplicationBuilder app)
+        // {
+        //     using var db = app.ApplicationServices
+        //     .CreateScope()
+        //     .ServiceProvider
+        //     .GetRequiredService<ApplicationContext>();
 
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
+        //     db.Database.EnsureDeleted();
+        //     db.Database.EnsureCreated();
 
-            for(var i=1; i<=5; i++)
-            {
-                db.People.Add(new Person{Name = $"Person{i}"});
-                db.Products.Add(new Product{Description = $"Product{i}"});
-            }
-            db.SaveChanges();
-        }
+        //     for(var i=1; i<=5; i++)
+        //     {
+        //         db.People.Add(new Person{Name = $"Person{i}"});
+        //         db.Products.Add(new Product{Description = $"Product{i}"});
+        //     }
+        //     db.SaveChanges();
+        // }
     }
 }

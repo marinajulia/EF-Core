@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace src.Domain.Abstract
+namespace src.Provider
 {
-    public abstract class BaseEntity
+    public class TenantData
     {
-        public int Id { get; set; }
         public string TenantId { get; set; }
     }
 }
