@@ -27,9 +27,9 @@ namespace EFCore.UowRepository.Data.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public bool Save()
-        {
-            return _context.SaveChanges() > 0;
-        }
+        //public bool Save()
+        //{
+        //    return _context.SaveChanges() > 0;
+        //}
     }
 }

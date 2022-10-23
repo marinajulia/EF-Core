@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFCore.UowRepository.Data;
 using EFCore.UowRepository.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,14 @@ namespace EFCore.UowRepository.Controllers
     public class DepartamentoController : ControllerBase
     {
         private readonly ILogger<DepartamentoController> _logger;
+        private readonly IUnitOfWork _uow;
         private readonly IDepartamentoRepository _departamentoRepository;
 
-        public DepartamentoController(ILogger<DepartamentoController> logger, IDepartamentoRepository repository)
+        public DepartamentoController(ILogger<DepartamentoController> logger, IDepartamentoRepository repository, IUnitOfWork uow)
         {
             _logger = logger;
             _departamentoRepository = repository;
+            _uow = uow;
         }
 
         //a parte comentada (referente ao from services), é uma maneira para ser usada para recuperar o repositório sem a necessidade da injeção de dependencia
@@ -36,7 +39,9 @@ namespace EFCore.UowRepository.Controllers
         {
              _departamentoRepository.Add(departamento);
 
-            var saved = _departamentoRepository.Save();
+            //var saved = _departamentoRepository.Save();
+
+            _uow.Commit();
             return Ok(departamento);
         }
     }
