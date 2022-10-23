@@ -57,5 +57,18 @@ namespace EFCore.UowRepository.Controllers
             _uow.Commit();
             return Ok(departamento);
         }
+
+        //departamento/?descricao=teste
+        [HttpGet]
+        public async Task<IActionResult> ConsultarDepartamentoAsync([FromQuery] string descricao)
+        {
+            var departamentos = await _uow.DepartamentoRepository.GetDataAsync(
+                p=> p.Descricao.Contains(descricao),
+                p=> p.Include(c=> c.Colaboradores),
+                take: 2); //take para retornar apenas 2 registros
+
+            
+            return Ok(departamentos);
+        }
     }
 }
